@@ -10,14 +10,14 @@ public class Reservation {
 	
 	private int roomNumber;
 	
-	private Date checkin;
+	private Date checkIn;
 	
-	private Date checkout;
+	private Date checkOut;
 
 	public Reservation(int roomNumber, Date checkin, Date checkout) {
 		this.roomNumber = roomNumber;
-		this.checkin = checkin;
-		this.checkout = checkout;
+		this.checkIn = checkin;
+		this.checkOut = checkout;
 	}
 
 	public int getRoomNumber() {
@@ -29,31 +29,40 @@ public class Reservation {
 	}
 
 	public Date getCheckin() {
-		return checkin;
+		return checkIn;
 	}
 
 
 	public Date getCheckout() {
-		return checkout;
+		return checkOut;
 	}
 
 	public long duration() {
-		long diff = checkout.getTime() - checkin.getTime();
+		long diff = checkOut.getTime() - checkIn.getTime();
 		diff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 		return diff;
 	}
 	
 	
-	public void updateDates(Date checkIn, Date checkOut) {
-		this.checkin = checkIn;
-		this.checkout = checkOut;
+	public String updateDates(Date checkIn, Date checkOut) {
+		
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return " Reservation dates for update must be future dates.";
+		} 
+		if(!checkOut.after(checkIn)) {
+			return "Error in reservation: Check-out date must be after check-in date.";
+		}
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		return null;
 		
 	}
 
 	@Override
 	public String toString() {
-		return "Reservation:  Room " + roomNumber + ", check - in: " + sdf.format(checkin) 
-		+ ", check-out: " + sdf.format(checkout) + ", " + duration() + " nights.";
+		return "Reservation:  Room " + roomNumber + ", check - in: " + sdf.format(checkIn) 
+		+ ", check-out: " + sdf.format(checkOut) + ", " + duration() + " nights.";
 	}
 	
 	
