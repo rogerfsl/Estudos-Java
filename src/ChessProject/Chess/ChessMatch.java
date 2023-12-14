@@ -1,5 +1,8 @@
 package ChessProject.Chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ChessProject.Bordgame.Board;
 import ChessProject.Bordgame.Piece;
 import ChessProject.Bordgame.Position;
@@ -11,6 +14,9 @@ public class ChessMatch {
 	private int turn;
 	private Color currentPlayer;
 	private Board board;
+	
+	private List<Piece> piecesOnTheBoard = new ArrayList<Piece>();
+	private List<Piece> caturedPieces = new ArrayList<Piece>();
 	
 	public ChessMatch() {
 		board = new Board(8, 8);
@@ -58,6 +64,11 @@ public class ChessMatch {
 		Piece p = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
 		board.placePiece(p, target);
+		
+		if(capturedPiece != null) {
+			piecesOnTheBoard.remove(capturedPiece);
+			caturedPieces.add(capturedPiece);
+		}
 		return capturedPiece;
 	}
 	
@@ -85,8 +96,10 @@ public class ChessMatch {
 	}
 	
 	private void placeNewPiece(char column, int row, ChessPiece piece) {// Vai receber as coordenadas do xadrez;
-		board.placePiece(piece, new ChessPosition(column, row).toPosition());
-	}// A operação de colocar peça passando a posição nas coordenadas do xadrez;
+		board.placePiece(piece, new ChessPosition(column, row).toPosition());// A operação de colocar peça passando a posição nas coordenadas do xadrez;
+		piecesOnTheBoard.add(piece);
+		
+	}
 	
 	private void initialSetup() {
 		placeNewPiece('c', 1, new Rook(board, Color.WHITE));
